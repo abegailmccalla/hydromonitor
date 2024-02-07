@@ -54,8 +54,8 @@ static const char* mqtt_server   = "dbs.msjrealtms.com";         // Broker IP ad
 static uint16_t mqtt_port        = 1883;
 
 // WIFI CREDENTIALS
-const char* ssid       = "Digicel_WiFi_JHTR";     // Add your Wi-Fi ssid
-const char* password   = "zu72Kg7p"; // Add your Wi-Fi password 
+const char* ssid       = "MonaConnect";     // Add your Wi-Fi ssid
+const char* password   = ""; // Add your Wi-Fi password 
 
 
 
@@ -173,7 +173,7 @@ void vUpdate( void * pvParameters )  {
             doc["timestamp"]    = getTimeStamp();
             doc["temperature"]  = t;
             doc["humidity"]     = h;
-            doc["heatindex"]   = calcHeatIndex(convert_Celsius_to_fahrenheit(t), h); //dht.computeHeatIndex(t,h); //
+            doc["heatindex"]   = calcHeatIndex(convert_Celsius_to_fahrenheit(t), h); //dht.computeHeatIndex(t,h);
 
               // 4. Seralize / Covert JSon object to JSon string and store in message array
 
@@ -288,29 +288,13 @@ double convert_Celsius_to_fahrenheit(double c){
 // Fahrenheit to Celsius Conversion Formula: Subtract 32 from the °F temperature. Multiply this number by 5/9. This is the answer in °C.
 double convert_fahrenheit_to_Celsius(double f){    
     // CONVERTS INPUT FROM °F TO °C. RETURN RESULT 
-    return (f - 32) * (5/9);
+    return (f - 32) * (5.0/9.0);
 }
 
-// HI= c1+c2T+c3R+c4TR+c5T^2+c6R^2+c7T^2R+c8TR^2+c9T^2R^2
-// In this formula,
-// HI = heat index in degrees Fahrenheit
-// R = Relative humidity
-// T = Temperature in ∘F
-// c1 = -42.379
-// c2= -2.04901523
-// c3 = -10.14333127
-// c4 = -0.22475541
-// c5 = -6.83783 x 10−3
-// c6 = -5.481717 x 10−2
-// c7 = -1.22874 x 10−3
-// c8 = 8.5282 x 10−4
-// c9 = -1.99 x 10−6
-double calcHeatIndex(double Temp, double Humid){
-    // CALCULATE AND RETURN HEAT INDEX USING EQUATION FOUND AT https://byjus.com/heat-index-formula/#:~:text=The%20heat%20index%20formula%20is,an%20implied%20humidity%20of%2020%25
-    //dht.computeHeatIndex(Temp, Humid, true); //The last argument, 'true,' changes the output to Fahrenheit.
-    return -42.379 + (-2.04901523 * Temp) + (-10.14333127 * Humid) + (-0.22475541 * Temp * Humid) + (-0.00683783 * Temp * Temp) + (-0.05481717 * Humid * Humid) + (-0.00122874 * Temp * Temp * Humid) + (0.00085282 * Temp * Humid * Humid) + (-0.00000199 * Temp * Temp * Humid * Humid);
+double calcHeatIndex(double Temp, double Humid) {
+  // CALCULATE AND RETURN HEAT INDEX USING EQUATION FOUND AT https://byjus.com/heat-index-formula/#:~:text=The%20heat%20index%20formula%20is,an%20implied%20humidity%20of%2020%25
+  return convert_fahrenheit_to_Celsius(-42.379 + (2.04901523 * Temp) + (10.14333127 * Humid) + (-0.22475541 * Temp * Humid) + (-(6.83783 * pow(10, -3)) * Temp * Temp) + (-(5.481717 * pow(10, -2)) * Humid * Humid) + ((1.22874 * pow(10, -3)) * Temp * Temp * Humid) + ((8.5282 * pow(10, -4)) * Temp * Humid * Humid) + (-(1.99 * pow(10, -6)) * Temp * Temp * Humid * Humid));
 }
- 
 
 bool isNumber(double number){       
         char item[20];
