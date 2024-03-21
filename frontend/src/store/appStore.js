@@ -14,7 +14,7 @@ export const useAppStore =  defineStore('app', ()=>{
         const controller = new AbortController();
         const signal = controller.signal;
         const id = setTimeout(()=>{controller.abort()},60000); 
-        const URL = `/api/climo/get/${start}/${end}`; 
+        const URL = `/api/WeatherStation/get/${start}/${end}`;
         try {
             const response = await fetch(URL,{ method: 'GET', signal: signal }); 
             if (response.ok){
@@ -40,13 +40,13 @@ export const useAppStore =  defineStore('app', ()=>{
         } 
         return [] 
     }
-    
-    const getTemperatureMMAR = async (start,end)=>{
+
+    const getDHTTemperatureMMAR = async (start,end)=>{
         // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
         const controller = new AbortController();
         const signal = controller.signal;
         const id = setTimeout(()=>{controller.abort()},60000); 
-        const URL = `/api/mmar/temperature/${start}/${end}`; 
+        const URL = `/api/mmar/dhttemperature/${start}/${end}`; 
         try {
             const response = await fetch(URL,{ method: 'GET', signal: signal }); 
             if (response.ok){
@@ -58,7 +58,7 @@ export const useAppStore =  defineStore('app', ()=>{
                         return data["data"]; 
                     }
                     if(data["status"] == "failed"){ 
-                        console.log("getTemperatureMMAR returned no data");
+                        console.log("getDHTTemperatureMMAR returned no data");
                     } 
                 } 
             }
@@ -68,17 +68,17 @@ export const useAppStore =  defineStore('app', ()=>{
             }
         }
         catch(err){ 
-            console.error('getTemperatureMMAR error: ', err.message); 
+            console.error('getDHTTemperatureMMAR error: ', err.message); 
         } 
         return [] 
     }
-    
-    const getHumidityMMAR = async (start,end)=>{
+
+    const getDHTHumidityMMAR = async (start,end)=>{
         // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
         const controller = new AbortController();
         const signal = controller.signal;
         const id = setTimeout(()=>{controller.abort()},60000); 
-        const URL = `/api/mmar/humidity/${start}/${end}`; 
+        const URL = `/api/mmar/dhthumidity/${start}/${end}`; 
         try {
             const response = await fetch(URL,{ method: 'GET', signal: signal }); 
             if (response.ok){
@@ -90,7 +90,7 @@ export const useAppStore =  defineStore('app', ()=>{
                         return data["data"]; 
                     }
                     if(data["status"] == "failed"){ 
-                        console.log(" getHumidityMMAR returned no data");
+                        console.log(" getDHTHumidityMMAR returned no data");
                     } 
                 } 
             }
@@ -100,11 +100,171 @@ export const useAppStore =  defineStore('app', ()=>{
             }
         }
         catch(err){ 
-            console.error(' getHumidityMMAR error: ', err.message); 
+            console.error(' getDHTHumidityMMAR error: ', err.message); 
         } 
         return [] 
     }
-    
+
+    const getDHTHeatIndexMMAR = async (start,end)=>{
+        // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const id = setTimeout(()=>{controller.abort()},60000); 
+        const URL = `/api/mmar/dhtheatindex/${start}/${end}`; 
+        try {
+            const response = await fetch(URL,{ method: 'GET', signal: signal }); 
+            if (response.ok){
+                const data = await response.json();
+                let keys = Object.keys(data);
+                if(keys.includes("status")){
+                    if(data["status"] == "found" ){
+                        console.log(data["data"] ) 
+                        return data["data"]; 
+                    }
+                    if(data["status"] == "failed"){ 
+                        console.log(" getDHTHeatIndexMMAR returned no data");
+                    } 
+                } 
+            }
+            else{ 
+                const data = await response.text();
+                console.log(data);
+            }
+        }
+        catch(err){ 
+            console.error(' getDHTHeatIndexMMAR error: ', err.message); 
+        } 
+        return [] 
+    }
+
+    const getBMPTemperatureMMAR = async (start,end)=>{
+        // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const id = setTimeout(()=>{controller.abort()},60000); 
+        const URL = `/api/mmar/bmptemperature/${start}/${end}`; 
+        try {
+            const response = await fetch(URL,{ method: 'GET', signal: signal }); 
+            if (response.ok){
+                const data = await response.json();
+                let keys = Object.keys(data);
+                if(keys.includes("status")){
+                    if(data["status"] == "found" ){
+                        console.log(data["data"] ) 
+                        return data["data"]; 
+                    }
+                    if(data["status"] == "failed"){ 
+                        console.log("getBMPTemperatureMMAR returned no data");
+                    } 
+                } 
+            }
+            else{ 
+                const data = await response.text();
+                console.log(data);
+            }
+        }
+        catch(err){ 
+            console.error('getBMPTemperatureMMAR error: ', err.message); 
+        } 
+        return [] 
+    }
+
+    const getBMPPressureMMAR = async (start,end)=>{
+        // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const id = setTimeout(()=>{controller.abort()},60000); 
+        const URL = `/api/mmar/bmppressure/${start}/${end}`; 
+        try {
+            const response = await fetch(URL,{ method: 'GET', signal: signal }); 
+            if (response.ok){
+                const data = await response.json();
+                let keys = Object.keys(data);
+                if(keys.includes("status")){
+                    if(data["status"] == "found" ){
+                        console.log(data["data"] ) 
+                        return data["data"]; 
+                    }
+                    if(data["status"] == "failed"){ 
+                        console.log("getBMPPressureMMAR returned no data");
+                    } 
+                } 
+            }
+            else{ 
+                const data = await response.text();
+                console.log(data);
+            }
+        }
+        catch(err){ 
+            console.error('getBMPPressureMMAR error: ', err.message); 
+        } 
+        return [] 
+    }
+
+    const getBMPAltitudeMMAR = async (start,end)=>{
+        // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const id = setTimeout(()=>{controller.abort()},60000); 
+        const URL = `/api/mmar/bmpaltitude/${start}/${end}`; 
+        try {
+            const response = await fetch(URL,{ method: 'GET', signal: signal }); 
+            if (response.ok){
+                const data = await response.json();
+                let keys = Object.keys(data);
+                if(keys.includes("status")){
+                    if(data["status"] == "found" ){
+                        console.log(data["data"] ) 
+                        return data["data"]; 
+                    }
+                    if(data["status"] == "failed"){ 
+                        console.log("getBMPAltitudeMMAR returned no data");
+                    } 
+                } 
+            }
+            else{ 
+                const data = await response.text();
+                console.log(data);
+            }
+        }
+        catch(err){ 
+            console.error('getBMPAltitudeMMAR error: ', err.message); 
+        } 
+        return [] 
+    }
+
+    const getSoilMoistureMMAR = async (start,end)=>{
+        // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const id = setTimeout(()=>{controller.abort()},60000); 
+        const URL = `/api/mmar/soil/${start}/${end}`; 
+        try {
+            const response = await fetch(URL,{ method: 'GET', signal: signal }); 
+            if (response.ok){
+                const data = await response.json();
+                let keys = Object.keys(data);
+                if(keys.includes("status")){
+                    if(data["status"] == "found" ){
+                        console.log(data["data"] ) 
+                        return data["data"]; 
+                    }
+                    if(data["status"] == "failed"){ 
+                        console.log("getSoilMoistureMMAR returned no data");
+                    } 
+                } 
+            }
+            else{ 
+                const data = await response.text();
+                console.log(data);
+            }
+        }
+        catch(err){ 
+            console.error('getSoilMoistureMMAR error: ', err.message); 
+        } 
+        return [] 
+    }
+          
     const  getFreqDistro = async (variable, start, end)=>{
         // FETCH REQUEST WILL TIMEOUT AFTER 20 SECONDS 
         const controller = new AbortController();
@@ -146,6 +306,6 @@ export const useAppStore =  defineStore('app', ()=>{
 
     return { 
         // EXPORTS	
-        getAllInRange, getTemperatureMMAR, getHumidityMMAR,  getFreqDistro,
+        getAllInRange, getDHTTemperatureMMAR, getDHTHumidityMMAR, getDHTHeatIndexMMAR,  getBMPTemperatureMMAR, getBMPPressureMMAR, getBMPAltitudeMMAR, getSoilMoistureMMAR, getFreqDistro,
     }
 },{ persist: true  });

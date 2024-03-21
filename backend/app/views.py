@@ -25,7 +25,28 @@ from math import floor
 #   Routing for your application    #
 #####################################
 
-@app.route('/api/climo/get/<start>/<end>', methods=['GET']) 
+@app.route('/api/WeatherStation/update/<start>/<end>', methods=['GET']) 
+def update(start,end):   
+    start = int(start)
+    end = int(end)
+    '''RETURNS ALL THE DATA FROM THE DATABASE THAT EXIST IN BETWEEN THE START AND END TIMESTAMPS'''
+    print(f"Start Date: {start}")
+    print(f"End Date: {end}")
+    print(type(start))
+    print(type(end))
+    if request.method == "GET":
+        '''Add your code here to complete this route'''
+        try:
+            range = mongo.insertData(start,end)
+            data = list(range)
+            if data:
+                return jsonify({"status":"complete","data": data})
+        except Exception as e:
+            print(f"update error: f{str(e)}") 
+    # FILE DATA NOT EXIST
+    return jsonify({"status":"failed","data":0})
+
+@app.route('/api/WeatherStation/get/<start>/<end>', methods=['GET']) 
 def get_all(start,end):   
     start = int(start)
     end = int(end)
@@ -41,71 +62,135 @@ def get_all(start,end):
             data = list(range)
             if data:
                 return jsonify({"status":"found","data": data})
-            
         except Exception as e:
             print(f"get_all error: f{str(e)}") 
-
     # FILE DATA NOT EXIST
     return jsonify({"status":"not found","data":[]})
    
-
-
-
-@app.route('/api/mmar/temperature/<start>/<end>', methods=['GET']) 
-def get_temperature_mmar(start,end):
+@app.route('/api/mmar/dhttemperature/<start>/<end>', methods=['GET']) 
+def get_temperature_DHT(start,end):
     start = int(start)
     end = int(end)   
-    '''RETURNS MIN, MAX, AVG AND RANGE FOR TEMPERATURE. THAT FALLS WITHIN THE START AND END DATE RANGE'''
-   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR DHT TEMPERATURE. THAT FALLS WITHIN THE START AND END DATE RANGE'''
     if request.method == "GET": 
         '''Add your code here to complete this route'''
         try:
-            temp = mongo.temperatureMMAR(start,end)
-            data = list(temp)
+            tempdht = mongo.temperatureDHT(start,end)
+            data = list(tempdht)
             if data:
                 return jsonify({"status":"found","data": data})
-            
         except Exception as e:
-            print(f"get_all error: f{str(e)}")
-        
-
+            print(f"get_temperature_DHT error: f{str(e)}")
     # FILE DATA NOT EXIST
-    return jsonify({"status":"not found","data":[]})
+    return jsonify({"status":"not found","data":0})
 
-
-
-
-
-@app.route('/api/mmar/humidity/<start>/<end>', methods=['GET']) 
-def get_humidity_mmar(start,end):
+@app.route('/api/mmar/dhthumidity/<start>/<end>', methods=['GET']) 
+def get_humidity_DHT(start,end):
     start = int(start)
     end = int(end)   
-    '''RETURNS MIN, MAX, AVG AND RANGE FOR HUMIDITY. THAT FALLS WITHIN THE START AND END DATE RANGE'''
-   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR DHT HUMIDITY. THAT FALLS WITHIN THE START AND END DATE RANGE'''
     if request.method == "GET": 
         '''Add your code here to complete this route'''
         try:
-            humid = mongo.humidityMMAR(start,end)
-            data = list(humid)
+            humiddht = mongo.humidityDHT(start,end)
+            data = list(humiddht)
             if data:
                 return jsonify({"status":"found","data": data})
-            
         except Exception as e:
-            print(f"get_humidity error: f{str(e)}") 
-
+            print(f"get_humidity_DHT error: f{str(e)}") 
     # FILE DATA NOT EXIST
-    return jsonify({"status":"not found","data":[]})
+    return jsonify({"status":"not found","data":0})
 
+@app.route('/api/mmar/dhtheatindex/<start>/<end>', methods=['GET']) 
+def get_heatindex_DHT(start,end):
+    start = int(start)
+    end = int(end)   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR DHT HEAT INDEX. THAT FALLS WITHIN THE START AND END DATE RANGE'''
+    if request.method == "GET": 
+        '''Add your code here to complete this route'''
+        try:
+            hidht = mongo.heatindexDHT(start,end)
+            data = list(hidht)
+            if data:
+                return jsonify({"status":"found","data": data})
+        except Exception as e:
+            print(f"get_heatindex_DHT error: f{str(e)}") 
+    # FILE DATA NOT EXIST
+    return jsonify({"status":"not found","data":0})
 
+@app.route('/api/mmar/bmptemperature/<start>/<end>', methods=['GET']) 
+def get_temperature_BMP(start,end):
+    start = int(start)
+    end = int(end)   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR BMP TEMPERATURE. THAT FALLS WITHIN THE START AND END DATE RANGE'''
+    if request.method == "GET": 
+        '''Add your code here to complete this route'''
+        try:
+            tempbmp = mongo.temperatureBMP(start,end)
+            data = list(tempbmp)
+            if data:
+                return jsonify({"status":"found","data": data})
+        except Exception as e:
+            print(f"get_temperature_BMP error: f{str(e)}")
+    # FILE DATA NOT EXIST
+    return jsonify({"status":"not found","data":0})
 
+@app.route('/api/mmar/bmppressure/<start>/<end>', methods=['GET']) 
+def get_pressure_BMP(start,end):
+    start = int(start)
+    end = int(end)   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR BMP PRESSURE. THAT FALLS WITHIN THE START AND END DATE RANGE'''
+    if request.method == "GET": 
+        '''Add your code here to complete this route'''
+        try:
+            presbmp = mongo.pressureBMP(start,end)
+            data = list(presbmp)
+            if data:
+                return jsonify({"status":"found","data": data})
+        except Exception as e:
+            print(f"get_pressure_BMP error: f{str(e)}")
+    # FILE DATA NOT EXIST
+    return jsonify({"status":"not found","data":0})
 
+@app.route('/api/mmar/bmpaltitude/<start>/<end>', methods=['GET']) 
+def get_altitude_BMP(start,end):
+    start = int(start)
+    end = int(end)   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR BMP ALTITUDE. THAT FALLS WITHIN THE START AND END DATE RANGE'''
+    if request.method == "GET": 
+        '''Add your code here to complete this route'''
+        try:
+            presbmp = mongo.altitudeBMP(start,end)
+            data = list(presbmp)
+            if data:
+                return jsonify({"status":"found","data": data})
+        except Exception as e:
+            print(f"get_altitude_BMP error: f{str(e)}")
+    # FILE DATA NOT EXIST
+    return jsonify({"status":"not found","data":0})
+
+@app.route('/api/mmar/soil/<start>/<end>', methods=['GET']) 
+def get_soil_moisture(start,end):
+    start = int(start)
+    end = int(end)   
+    '''RETURNS MIN, MAX, AVG AND RANGE FOR SOIL MOISTURE. THAT FALLS WITHIN THE START AND END DATE RANGE'''
+    if request.method == "GET": 
+        '''Add your code here to complete this route'''
+        try:
+            sm = mongo.soilmoisture(start,end)
+            data = list(sm)
+            if data:
+                return jsonify({"status":"found","data": data})
+        except Exception as e:
+            print(f"get_soil_moisture error: f{str(e)}")
+    # FILE DATA NOT EXIST
+    return jsonify({"status":"not found","data":0})
 
 @app.route('/api/frequency/<variable>/<start>/<end>', methods=['GET']) 
 def get_freq_distro(variable,start,end):
     start = int(start)
     end = int(end)   
     '''RETURNS FREQUENCY DISTRIBUTION FOR SPECIFIED VARIABLE'''
-   
     if request.method == "GET": 
         '''Add your code here to complete this route'''    
         try:
@@ -113,22 +198,16 @@ def get_freq_distro(variable,start,end):
             data = list(freq)
             if data:
                 return jsonify({"status":"found","data": data})
-            
         except Exception as e:
-            print(f"get_all error: f{str(e)}")     
-
+            print(f"get_freq_distro error: f{str(e)}")     
     # FILE DATA NOT EXIST
     return jsonify({"status":"not found","data":[]})
-
-
 
 @app.route('/api/file/get/<filename>', methods=['GET']) 
 def get_images(filename):   
     '''RETURNS REQUESTED FILE FROM UPLOADS FOLDER'''
-   
     if request.method == "GET":
         '''Add your code here to complete this route'''
-        
         # FILE DOES NOT EXIST
         return jsonify({"status":"file not found"}), 404
 
